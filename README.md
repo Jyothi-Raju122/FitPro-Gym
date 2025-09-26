@@ -64,14 +64,14 @@ The following queries were created to solve specific business questions. Each qu
 
 Additional aggregations and grouping:
 6. Count total visits made by each member.
-'''sql
+```sql
 SELECT * FROM visits
 SELECT 
 	member_id,
 	COUNT(visit_date)
 FROM visits
 GROUP BY 1;
-'''
+```
 
 7. Count members by membership type (e.g., Monthly, Weekly, Quarterly).
 8. Calculate the average age of members, grouped by membership type.
