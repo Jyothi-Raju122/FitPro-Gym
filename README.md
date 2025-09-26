@@ -63,6 +63,7 @@ The following queries were created to solve specific business questions. Each qu
 5. List members with a **Quarterly membership** aged between **20 and 30**.
 
 Additional aggregations and grouping:
+
 6. Count total visits made by each member.
 ```sql
 SELECT * FROM visits
