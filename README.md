@@ -69,9 +69,41 @@ WHERE ms.gender = 'F';
 
 ```
 2. Find members who have a **Monthly membership** and joined after **2023-11-01**.
+```sql
+SELECT *
+FROM memberships
+WHERE membership_type = 'Monthly'
+AND join_date > '2023-11-01'
+ORDER BY join_date;
+```
+
 3. List the **name** and **status** of active members over **25**.
+```sql
+SELECT 
+	m.name,
+	ms.status,
+	ms.membership_type,
+	ms.age
+FROM 
+	members m
+	JOIN memberships ms ON ms.member_id = m.member_id
+WHERE ms.age > 25;
+```
+
 4. Get details of **visits** on a specific date (**2024-01-01**).
+```sql
+SELECT *
+FROM visits
+WHERE visit_date = '2024-01-01';
+```
+
 5. List members with a **Quarterly membership** aged between **20 and 30**.
+```sql
+SELECT *
+FROM memberships
+WHERE membership_type = 'Quaterly'
+AND age BETWEEN 20 AND 30;
+```
 
 Additional aggregations and grouping:
 
@@ -86,18 +118,113 @@ GROUP BY 1;
 ```
 
 7. Count members by membership type (e.g., Monthly, Weekly, Quarterly).
+```sql
+SELECT 
+	membership_type,
+	count(member_id)
+FROM memberships
+GROUP BY membership_type;
+```
+
 8. Calculate the average age of members, grouped by membership type.
+```sql
+SELECT 
+	membership_type,
+	avg(age)
+FROM memberships
+GROUP BY membership_type;
+```
+
 9. Total visits for each visit date.
+```sql
+SELECT 
+	visit_date,
+	count(*)
+FROM visits
+GROUP BY visit_date
+ORDER BY visit_date;
+```
+
 10. Count members by status (e.g., Active or Cancelled).
+```sql
+SELECT 
+	status,
+	COUNT(member_id)
+FROM memberships
+WHERE status IN ('Active','Cancelled')
+GROUP BY status
+```
 
 Advanced queries:
 11. Top 3 members with the highest visits.
-12. Active Monthly members grouped by membership type, sorted by recent join dates.
-13. Members with more than 2 visits, sorted by total visits, displaying the top 5.
-14. Members who joined in 2023, grouped by membership type (where each group has >1 member).
-15. Average age of active members, grouped by membership type, limited to the top 3 results.
+```sql
+SELECT 
+	member_id,
+	count(*) as total_visits
+FROM visits
+GROUP BY member_id
+ORDER BY 2 DESC
+LIMIT 3;
+```
 
----
+12. Active Monthly members grouped by membership type, sorted by recent join dates.
+```sql
+SELECT 
+	membership_type,
+	count(*) as number_of_members,
+	join_date
+
+FROM memberships
+WHERE membership_type = 'Monthly'
+AND status = 'Active'
+GROUP BY 1, 3
+ORDER BY join_date DESC
+LIMIT 2;
+```
+
+13. Members with more than 2 visits, sorted by total visits, displaying the top 5.
+```sql
+SELECT
+	member_id,
+	count(*) as number_of_visits
+FROM
+ 	visits
+GROUP BY 1
+HAVING count(*) > 2
+ORDER BY 2 DESC
+LIMIT 5;
+```
+
+14. Members who joined in 2023, grouped by membership type (where each group has >100 member).
+```sql
+SELECT
+	membership_type,
+	count(*) as number_of_members,
+	MIN(join_date),MAX(JOIN_DATE)
+	
+FROM
+	memberships
+WHERE
+join_date BETWEEN '2023-01-01' AND '2023-12-31'
+
+GROUP BY membership_type
+HAVING count(*) > 100;
+```
+
+15. Average age of active members, grouped by membership type, limited to the top 3 results.
+```sql
+SELECT
+	membership_type,
+	ROUND(AVG(age),2)
+	,MIN(age),max(age)
+FROM
+	memberships
+WHERE
+ status = 'Active'
+GROUP BY membership_type
+ORDER BY membership_type ASC
+LIMIT 3;
+```
 
 ## SQL Queries & Analysis
 
