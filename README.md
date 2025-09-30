@@ -156,6 +156,7 @@ GROUP BY status
 ```
 
 Advanced queries:
+
 11. Top 3 members with the highest visits.
 ```sql
 SELECT 
