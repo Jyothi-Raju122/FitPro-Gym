@@ -71,9 +71,11 @@ WHERE ms.gender = 'F';
 2. Find members who have a **Monthly membership** and joined after **2023-11-01**.
 ```sql
 SELECT *
-FROM memberships
-WHERE membership_type = 'Monthly'
-AND join_date > '2023-11-01'
+FROM
+	memberships
+WHERE
+	membership_type = 'Monthly'
+	AND join_date > '2023-11-01'
 ORDER BY join_date;
 ```
 
@@ -86,34 +88,40 @@ SELECT
 	ms.age
 FROM 
 	members m
-	JOIN memberships ms ON ms.member_id = m.member_id
-WHERE ms.age > 25;
+	JOIN memberships ms
+	ON ms.member_id = m.member_id
+WHERE
+	ms.age > 25;
 ```
 
 4. Get details of **visits** on a specific date (**2024-01-01**).
 ```sql
 SELECT *
-FROM visits
-WHERE visit_date = '2024-01-01';
+FROM
+	visits
+WHERE
+	visit_date = '2024-01-01';
 ```
 
 5. List members with a **Quarterly membership** aged between **20 and 30**.
 ```sql
 SELECT *
-FROM memberships
-WHERE membership_type = 'Quaterly'
-AND age BETWEEN 20 AND 30;
+FROM
+	memberships
+WHERE
+	membership_type = 'Quaterly'
+	AND age BETWEEN 20 AND 30;
 ```
 
 Additional aggregations and grouping:
 
 6. Count total visits made by each member.
 ```sql
-SELECT * FROM visits
 SELECT 
 	member_id,
 	COUNT(visit_date)
-FROM visits
+FROM
+	visits
 GROUP BY 1;
 ```
 
@@ -122,8 +130,9 @@ GROUP BY 1;
 SELECT 
 	membership_type,
 	count(member_id)
-FROM memberships
-GROUP BY membership_type;
+FROM
+	memberships
+GROUP BY 1;
 ```
 
 8. Calculate the average age of members, grouped by membership type.
@@ -131,8 +140,9 @@ GROUP BY membership_type;
 SELECT 
 	membership_type,
 	avg(age)
-FROM memberships
-GROUP BY membership_type;
+FROM
+	memberships
+GROUP BY 1;
 ```
 
 9. Total visits for each visit date.
@@ -140,9 +150,10 @@ GROUP BY membership_type;
 SELECT 
 	visit_date,
 	count(*)
-FROM visits
-GROUP BY visit_date
-ORDER BY visit_date;
+FROM
+	visits
+GROUP BY 1
+ORDER BY 1;
 ```
 
 10. Count members by status (e.g., Active or Cancelled).
@@ -150,9 +161,11 @@ ORDER BY visit_date;
 SELECT 
 	status,
 	COUNT(member_id)
-FROM memberships
-WHERE status IN ('Active','Cancelled')
-GROUP BY status
+FROM
+	memberships
+WHERE
+	status IN ('Active','Cancelled')
+GROUP BY 1;
 ```
 
 Advanced queries:
@@ -162,8 +175,9 @@ Advanced queries:
 SELECT 
 	member_id,
 	count(*) as total_visits
-FROM visits
-GROUP BY member_id
+FROM
+	visits
+GROUP BY 1
 ORDER BY 2 DESC
 LIMIT 3;
 ```
@@ -174,12 +188,13 @@ SELECT
 	membership_type,
 	count(*) as number_of_members,
 	join_date
-
-FROM memberships
-WHERE membership_type = 'Monthly'
-AND status = 'Active'
+FROM
+	memberships
+WHERE
+	membership_type = 'Monthly'
+	AND status = 'Active'
 GROUP BY 1, 3
-ORDER BY join_date DESC
+ORDER BY 3 DESC
 LIMIT 2;
 ```
 
@@ -200,16 +215,14 @@ LIMIT 5;
 ```sql
 SELECT
 	membership_type,
-	count(*) as number_of_members,
-	MIN(join_date),MAX(JOIN_DATE)
-	
+	EXTRACT(YEAR FROM join_date),
+	count(member_id)
 FROM
 	memberships
 WHERE
-join_date BETWEEN '2023-01-01' AND '2023-12-31'
-
-GROUP BY membership_type
-HAVING count(*) > 100;
+	EXTRACT(YEAR FROM join_date) = 2023
+GROUP BY 1,2
+HAVING count(member_id) > 100;
 ```
 
 15. Average age of active members, grouped by membership type, limited to the top 3 results.
@@ -222,8 +235,8 @@ FROM
 	memberships
 WHERE
  status = 'Active'
-GROUP BY membership_type
-ORDER BY membership_type ASC
+GROUP BY 1
+ORDER BY 1 ASC
 LIMIT 3;
 ```
 
